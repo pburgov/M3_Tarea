@@ -18,7 +18,6 @@ AUTHOR: Pedro Burgo Vázquez
 DATE: 24/11/2017
 
 
-
 ### Descripción de la Práctica
 
 Como Tarea del Módulo 3 del Master de Big Data de Telefónica, se realiza un Análisis explotatorio apoyado en algún método no supervisado para posteriormente llevar a cabo la construcción de al menos 2 modelos *machine learning* supervisados y comparar dichos modelos.
