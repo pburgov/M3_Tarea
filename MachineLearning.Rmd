@@ -19,7 +19,7 @@ output:
 
 </style>
 ```{r global_options, include=FALSE}
-knitr::opts_chunk$set(echo=FALSE, warning=FALSE, message=FALSE)
+  knitr::opts_chunk$set(echo=FALSE, warning=FALSE, message=FALSE)
 ```
 ## 1.Introducción
 
@@ -31,9 +31,9 @@ y la variable a predecir la nota final G3
 
 ## 2. Carga de los Datos y Análisis Descriptivo
 ```{r directorios,  include=FALSE}
-getwd()
-pathToMain <- "/Users/Casa/Documents/MBD/M3_Tarea"
-setwd(pathToMain)
+  getwd()
+  pathToMain <- "/Users/Casa/Documents/MBD/M3_Tarea"
+  setwd(pathToMain)
 ```
 
 
@@ -109,8 +109,8 @@ setwd(pathToMain)
 Descargamos el archivo, lo descomprimimos y leemos el archivo que nos interesa. Vamos a trabajar únicamente con el dataset de la asignatura de portugués.
 ```{r conexionDatos, echo=TRUE}
   fileURL <- "https://archive.ics.uci.edu/ml/machine-learning-databases/00320/student.zip"
-  download.file(fileURL,destfile = paste0(dirPreData,"/student.zip"))
-  unzip(paste0(dirPreData,"/student.zip"), exdir=dirPreData)
+  # download.file(fileURL,destfile = paste0(dirPreData,"/student.zip"))
+  # unzip(paste0(dirPreData,"/student.zip"), exdir=dirPreData)
   conexion <- file(paste0(dirPreData,"/student-por.csv"),"r")
   stPor <- read.csv2(conexion, sep = ";",  header = TRUE )
   close(conexion)
@@ -183,15 +183,14 @@ Primero vamos a crear una serie de variables para trabajar mejor con el dataset
   matCor[is.na(matCor)] <- 0
   col <- colorRampPalette(cbPalette)
   
-  png(filename=paste0(dirFinalFig,"/","matriz.png"))
-  
   corrplot(matCor, method = "shade", shade.col = NA, tl.col = "black",
            tl.srt = 45, col = col(50), addCoef.col = "black",
            order = "AOE", type = "upper",
            mar = c(0.000000001,0.1,1,1), number.cex = 0.5,cl.cex = 0.7,tl.cex = 0.7,
            title = "Fig 2.7.1 Matriz de Correlación")
   
-  dev.off()
+  dev.copy(jpeg,filename=paste0(dirFinalFig,"/","matriz.jpg"));
+  dev.off ();
 
 ```
 
@@ -221,7 +220,7 @@ Primero con respecto al padre.
           xlab("Nivel Educación Paterna")  + ylab("Nº de Alumnos") + 
           scale_fill_brewer(name = "Nivel Alcanzado", palette = "GnBu")
   
-  ggsave(paste0(dirFinalFig,"/","fedu.png"))
+  ggsave(paste0(dirFinalFig,"/","fedu.jpg"))
   
 ```
 
@@ -242,7 +241,7 @@ Lo mismo para el nivel educativo de la madre
           xlab("Nivel Educación Materna")  + ylab("Nº de Alumnos") + 
           scale_fill_brewer(name = "Nivel Alcanzado", palette = "GnBu")
   
-  ggsave(paste0(dirFinalFig,"/","medu.png"))
+  ggsave(paste0(dirFinalFig,"/","medu.jpg"))
 
 ```
 
@@ -265,7 +264,7 @@ Haremos lo mismo para la variable *failures* (fracasos en anteriores asignaturas
         xlab("Nº de Fracasos")  + ylab("Nº de Alumnos") + 
         scale_fill_brewer(name = "Nº Fracasos", palette = "GnBu")
   
-  ggsave(paste0(dirFinalFig,"/","failures.png"))
+  ggsave(paste0(dirFinalFig,"/","failures.jpg"))
 
 ```
 
@@ -301,9 +300,15 @@ Estudiamos las reglas de asociación estableciendo un soporte del 5% y una confi
 
 
 ```{r plotlift,  echo=TRUE,  results='hold', fig.width=5, fig.height=5, fig.align = 'center'}
-  png(filename=paste0(dirFinalFig,"/","reglas.png"))
+  
   plot(reglas, method = "grouped", control = list(k = 15, col = heat.colors(10)))
-  dev.off() 
+
+```
+```{saveplotlift}
+
+  dev.copy(jpeg,filename=paste0(dirFinalFig,"/","reglas.jpg"));
+  dev.off ();
+
 ```
 
 Se observa un clara asociación entre los niveles educativos altos de los padres y la consecución del aprobado. Esta relación ya asomaba en las distribuciones mostradas en el apartado anterior.
@@ -334,7 +339,7 @@ Creamos las particiones de los dataset de entrenamiento y test con la libreria *
   prop.table(table(test.st$pass))
 ```
 
-Buscamos para eliminar con una varianza cercana a cero.
+Buscamos aquellas variables con una varianza cercana a cero para ser eliminadas.
 ```{r nearzerovariables}
 
   zero.var.train.index <- nearZeroVar( train.st[,-dim(train.st)[2]], saveMetrics = F )
@@ -354,7 +359,7 @@ Ahora buscamos las variables fuertemente correladas también para eliminarlas.
 
 ```
 
-Obtenemos las variables *g1* y *g2*
+Obtenemos las variables *g2* y *g3*
 El número de variables predictoras se reduce únicamente en 2
 Centramos y escalamos las variables para reducir la desviación con la función preProcess()
 
@@ -372,21 +377,7 @@ Centramos y escalamos las variables para reducir la desviación con la función 
 
 Vamos a construir varios modelos para compararlos posteriormente
 
-#### 4.2.1 Modelo de Regresión Lineal Binaria clásica
-
-```{r glm.model, echo = TRUE}
-  library(pROC)
-  set.seed(1973)
-  #Creamos el modelo
-  glm.model <- glm(pass~ . , data = train.data, family = binomial)
-  pred.glm.model <- predict(glm.model, newdata = test.data, type = "response")
-  #Calculamos el AUC
-  roc.glm.model <- pROC::roc(test.data$pass, pred.glm.model)
-  auc.glm.model <- pROC::auc(roc.glm.model)
-  
-```
-
-#### 4.2.2 Classification and Regression Trees (CART)
+#### 4.2.1 Classification and Regression Trees (CART)
 
 ```{r cart.model, echo = TRUE}
   # Utilizamos validación cruzada como técnica de remuestreo
@@ -405,7 +396,7 @@ Vamos a construir varios modelos para compararlos posteriormente
 ```
 
 
-#### 4.2.3 Regresión Lineal Penalizada (ELASTIC NET)
+#### 4.2.2 Regresión Lineal Penalizada (ELASTIC NET)
 
 ```{r elastic.model, echo = TRUE}
 
@@ -418,6 +409,21 @@ Vamos a construir varios modelos para compararlos posteriormente
   roc.elastic.model <- pROC::roc(test.data$pass, pred.elastic.model)
   auc.elastic.model <- pROC::auc(roc.elastic.model)
 
+```
+
+
+#### 4.2.3 Regresión Lineal Binaria clásica
+
+```{r glm.model, echo = TRUE}
+  library(pROC)
+  set.seed(1973)
+  #Creamos el modelo
+  glm.model <- train(pass ~ ., data = train.data, method = "glm", metric = "ROC",
+                         trControl = control, family = "binomial", tuneLength = 5)
+  pred.glm.model <- as.vector(predict(glm.model, newdata = test.data, type = "prob")[,"A"])
+  #Calculamos el AUC
+  roc.glm.model <- pROC::roc(test.data$pass, pred.glm.model)
+  auc.glm.model <- pROC::auc(roc.glm.model)
 ```
 
 
@@ -457,8 +463,8 @@ Vamos a construir varios modelos para compararlos posteriormente
 Creamos un *dataframe* con los valores de las *auc* obtenidas.
 ```{r evaluacionModelos, echo=TRUE}
 
-   eva.auc <- data.frame(model = c("glm", "cart", "elastic", "gbm","randomf" ),
-                         auc = c(auc.glm.model, auc.cart.model, auc.elastic.model, auc.gbm.model,
+   eva.auc <- data.frame(model = c("cart", "elastic","glm", "gbm","randomf" ),
+                         auc = c(auc.cart.model, auc.elastic.model, auc.glm.model, auc.gbm.model,
                                  auc.randomf.model))
 
   eva.auc <- eva.auc[order(eva.auc$auc, decreasing = TRUE),]#Ordenamos de mayor a menor
@@ -479,7 +485,7 @@ En el siguiente gráfico observamos la AUC que obtenemos de cada uno de los mode
         ggtitle("Fig 5.1 Comparación de modelos") +   custom_theme() +  
         xlab("Modelos")  + ylab("Area Bajo la Curva (AUC)")
 
-  ggsave(paste0(dirFinalFig,"/","evaluacion.png"))
+  ggsave(paste0(dirFinalFig,"/","evaluacion.jpg"))
 ```
 
 Se aprecia que el modelo *elastic net* es el que presenta una mayor *AUC*, aunque no con una gran ventaja frente a los modelos que le siguen.
