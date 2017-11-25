@@ -10,11 +10,13 @@ SCRIPT: MachineLearning.Rmd
 AUTHOR: Pedro Burgo Vázquez
 
 DATE: 24/11/2017
+<script>
   <style>
    OL { counter-reset: item }
    LI { display: block }
    LI:before { content: counters(item, ".") " "; counter-increment: item }
   </style>
+</script>
 
 ### Descripción de la Práctica
 
