@@ -188,7 +188,10 @@ Primero vamos a crear una serie de variables para trabajar mejor con el dataset
            order = "AOE", type = "upper",
            mar = c(0.000000001,0.1,1,1), number.cex = 0.5,cl.cex = 0.7,tl.cex = 0.7,
            title = "Fig 2.7.1 Matriz de Correlación")
-  
+
+```
+```{saveplotmatriz}
+
   dev.copy(jpeg,filename=paste0(dirFinalFig,"/","matriz.jpg"));
   dev.off ();
 
@@ -319,7 +322,8 @@ Vamos a usar todas las siguientes variables numéricas del dataset:
 *age,medu,fedu,traveltime,studytime,failures,famrel,freetime,goout,dalc,walc,health,absences,g1,g2,g3, pass*
 
 ```{r seleccionvariables, echo = TRUE}
-   st <- st %>%  select(age,medu,fedu,traveltime,studytime,failures,famrel,freetime,goout,dalc,walc,health,absences,g1,g2,g3, pass)
+   st <- st %>%  select(age,medu,fedu,traveltime,studytime,failures,famrel,freetime,goout,dalc,
+                        walc,health,absences,g1,g2,g3, pass)
    st$pass <- ifelse(st$pass == '1', 'A', 'S')
    st$pass <- factor(st$pass,levels = c('A', 'S') )
 ```
@@ -380,8 +384,10 @@ Vamos a construir varios modelos para compararlos posteriormente
 #### 4.2.1 Classification and Regression Trees (CART)
 
 ```{r cart.model, echo = TRUE}
+  library(pROC)
   # Utilizamos validación cruzada como técnica de remuestreo
-  control <- trainControl(method = "repeatedcv", repeats = 10, classProbs = TRUE,  summaryFunction = twoClassSummary)
+  control <- trainControl(method = "repeatedcv", repeats = 10, classProbs = TRUE,
+                          summaryFunction = twoClassSummary)
   
   set.seed(1973)
   #Creamos el modelo
@@ -415,7 +421,7 @@ Vamos a construir varios modelos para compararlos posteriormente
 #### 4.2.3 Regresión Lineal Binaria clásica
 
 ```{r glm.model, echo = TRUE}
-  library(pROC)
+
   set.seed(1973)
   #Creamos el modelo
   glm.model <- train(pass ~ ., data = train.data, method = "glm", metric = "ROC",
