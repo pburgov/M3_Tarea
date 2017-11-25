@@ -22,10 +22,13 @@ El dataset contiene 2 archivos CSV, uno con datos de alumnos de portugués y otr
 
 Como últimas tres variables de los *datasets* s eencuentran las notas de la materia del curso: <code>G1, G2 y G3 </code>, siendo está última la que se esocge como *target*
 Las descripciones de estas variables, se  se pueden ver en archivo *student.txt*, alojado en el mismo archivo descargado.
-La Práctica consta de las siguientes partes:
-##1.Introducción
-##2. Carga de los Datos y Análisis Descriptivo
-###2.1 Carga del dataset original
+La tarea consta de los siguientes puntos:
+<ol>
+<li> Introducción </li>
+</ol>
+
+## 2. Carga de los Datos y Análisis Descriptivo
+### 2.1 Carga del dataset original
 ###2.2 Inspección Inicial de los datos
 ###2.3 Analizamos la distribución de algunas variables
 ###2.4 Matriz de correlación
