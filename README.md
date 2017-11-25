@@ -1,8 +1,12 @@
 ---
-title: "MachineLearning.Rmd"
-author: "Pedro Burgo Vázquez"
-date: "24/11/2017"
-output: html_document
+title: "Modelo Machine Learning"
+author: "Pedro Burgo"
+date: "24 de noviembre de 2017"
+output:
+  html_document:
+    highlight: tango
+    theme: cerulean
+
 ---
 
 SCRIPT: MachineLearning.Rmd
@@ -10,13 +14,7 @@ SCRIPT: MachineLearning.Rmd
 AUTHOR: Pedro Burgo Vázquez
 
 DATE: 24/11/2017
-<script>
-  <style>
-   OL { counter-reset: item }
-   LI { display: block }
-   LI:before { content: counters(item, ".") " "; counter-increment: item }
-  </style>
-</script>
+
 
 ### Descripción de la Práctica
 
@@ -30,10 +28,10 @@ Como últimas tres variables de los *datasets* s eencuentran las notas de la mat
 Las descripciones de estas variables, se  se pueden ver en archivo *student.txt*, alojado en el mismo archivo descargado.
 La tarea consta de los siguientes puntos:
 
-<ol>
+<ol type="1">
 <li> Introducción </li>
 <li> Carga de los Datos y Análisis Descriptivo
-<ol>
+<ol type="1">
 <li> Carga del dataset original</li>
 <li> Inspección Inicial de los datos</li>
 <li> Analizamos la distribución de algunas variables</li>
@@ -43,7 +41,7 @@ La tarea consta de los siguientes puntos:
 </li>
 <li>Análisis exploratorio apoyado en algún método NO Supervisado</li>
 <li> Construcción de 2 o más modelos de Machine Learning supervisados
-<ol>
+<ol type="1">
 <li> Selección de variables</li>
 <li> Construcción de modelos</li>
 </ol>
